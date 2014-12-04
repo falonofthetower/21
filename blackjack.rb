@@ -231,11 +231,17 @@ end
 
 def test_for_broke(player)
   if player_broke?(player)
+    puts "You don't have that much cash"
+    sleep 2
+    puts "You have a bad feeling"
+    sleep 2
+    puts "A very bad feeling!"
+    sleep 2
     system("clear")
     sleep 3
-    puts "You awake in the alley"
+    puts "You wake up in the alley"
     sleep 2
-    puts "You've been beaten badly"    
+    puts "You are covered in bruises and are short three teeth"    
     sleep 2
     puts "There is a tattoo on your forehead: #{player[:name]} Owes $#{player[:chips] * -1}"
     sleep 2
