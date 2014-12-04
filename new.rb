@@ -60,7 +60,7 @@ begin
   blackjack(dealer)
 
   puts "Place your bet!"  
-  bet = gets.chomp
+  bet = gets.chomp.to_i
   player[:chips] -= bet.to_i
   begin    
     my_total = calculate_total(player[:hand])
@@ -80,31 +80,29 @@ begin
   unless bust  
     while dealer_total < 17
       dealer_total = calculate_total(dealer[:hand])
-      dealer[:hand] << deck.pop
-      #dealer_total = calculate_total(dealer[:hand])
+      dealer[:hand] << deck.pop      
       bust = bust?(dealer)    
     end
   end
 
   puts "My total: #{my_total}"
   puts "Dealer total: #{dealer_total}"  
-  
-
+  #binding.pry 
   if my_total > 21
     puts "#{player[:name]} busts!"
   elsif player[:blackjack] == 1
-    player[:chip] += bet * 2.5
+    player[:chips] += bet * 2.5
     puts "BlackJack!"    
   elsif my_total > dealer_total
-    player[:chip] += bet * 2
+    player[:chips] += bet * 2
     puts "#{player[:name]} Wins!"
   elsif dealer_total > 21
-    player[:chip] += bet * 2
+    player[:chips] += bet * 2
     puts "Dealer Busts"      
   elsif dealer_total > my_total
     puts "Dealer wins!"
   elsif my_total == dealer_total
-    player[:chip] += bet
+    player[:chips] += bet
     puts "Push"  
   end
 end until false
