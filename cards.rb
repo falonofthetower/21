@@ -1,4 +1,5 @@
-set_of_cards  = [{ suit: "hearts", color: "red", face_value: "A", value: 11 },
+def set_of_cards
+  set_of_cards = [{ suit: "hearts", color: "red", face_value: "A", value: 11 },
                 { suit: "hearts", color: "red", face_value: "2", value: 2 },
                 { suit: "hearts", color: "red", face_value: "3", value: 3 },
                 { suit: "hearts", color: "red", face_value: "4", value: 4 },
@@ -51,6 +52,7 @@ set_of_cards  = [{ suit: "hearts", color: "red", face_value: "A", value: 11 },
                 { suit: "clubs", color: "black", face_value: "J", value: 10 },
                 { suit: "clubs", color: "black", face_value: "Q", value: 10 },
                 { suit: "clubs", color: "black", face_value: "K", value: 10 }]                
+end
 
 def shuffle_decks(set_of_cards)
   set_of_cards.shuffle!  
@@ -61,8 +63,9 @@ def deal_card(deck)
 end
 
 def deal_round(player,dealer,deck)
+  reset_player_active(player)
   hit(player,deck)
   hit(dealer,deck)
   hit(player,deck)
-  hit(dealer,deck)
+  hit(dealer,deck)  
 end
