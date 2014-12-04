@@ -8,7 +8,7 @@ end
 
 def create_deck
   suits = ['H', 'D', 'S', 'C']
-  face = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
+  face = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
   deck = suits.product(face)
   deck.shuffle!
 end
@@ -57,9 +57,8 @@ def deck_low?(deck)
   deck.count < 20  
 end
 
-def deal_card(player,deck)
-  deck.shuffle! if deck_low?(deck)
-  player[:hand] << deck.pop  
+def deal_card(player,deck)  
+  player[:hand] << deck.pop
 end
 
 # Display methods
@@ -72,11 +71,7 @@ def display_hand(player)
   bottom_line = ""
   player[:hand].each do |card|
      top_line <<             " ---  "
-     if card[1] == '10' 
-      denomination_line <<    "| #{card[1]}| "
-    else
-      denomination_line <<    "| #{card[1]} | "
-    end
+     denomination_line <<    "| #{card[1]} | "    
      suit_line <<            "| #{card[0]} | "
      side_line <<            "|   | "
      bottom_line <<          " ---  "
@@ -144,6 +139,7 @@ def introduction(player)
 end
 
 def start_round(player,dealer,deck)  
+  deck = create_deck.shuffle! if deck_low?(deck)
   player[:bet] = 0
   player[:hand] = []
   dealer[:hand] = []  
@@ -157,9 +153,7 @@ def start_round(player,dealer,deck)
   puts "Place your bet!"  
 
   player[:bet] = gets.chomp.to_i
-  player[:chips] -= player[:bet]
-  
-  
+  player[:chips] -= player[:bet]  
   
   display_table(player,dealer) 
   deal_card(player,deck)
@@ -174,27 +168,29 @@ end
 
 def play_player(player,dealer,deck)
   begin
-    blackjack = check_for_blackjacks?(player,dealer)
 
-    player_total = calculate_total(player[:hand])
-    dealer_total = calculate_total(dealer[:hand])
-    #display_table(player,dealer)
-    puts "Your total is: #{player_total}, dealer has: #{dealer_total}"
-    puts "Hit or Stay? h/s"
-    hit_or_stay = gets.chomp
-    if hit_or_stay == 'h'    
-      deal_card(player,deck)
-    display_table(player,dealer)
-    elsif hit_or_stay != 's'
-      puts "pick (h) or (s)"    
+    blackjack = check_for_blackjacks?(player,dealer)
+    unless dealer[:blackjack]
+      player_total = calculate_total(player[:hand])
+      dealer_total = calculate_total(dealer[:hand])
+      
+      puts "Your total is: #{player_total}, dealer has: #{dealer_total}"
+      puts "Hit or Stay? h/s"
+      hit_or_stay = gets.chomp
+      if hit_or_stay == 'h'    
+        deal_card(player,deck)
+        display_table(player,dealer)
+      elsif hit_or_stay != 's'
+        puts "pick (h) or (s)"    
+      end
+      player_total = calculate_total(player[:hand])
+      player[:bust] = bust?(player)  
     end
-    player_total = calculate_total(player[:hand])
-    player[:bust] = bust?(player)  
   end until (hit_or_stay == 's') || (player[:bust] == true) || blackjack
 end
 
 def play_dealer(player,dealer,deck)
-  unless player[:bust] || player[:blackjack]
+  unless player[:bust] || player[:blackjack] || dealer[:blackjack]
     dealer_total = calculate_total(dealer[:hand])
     while dealer_total < 17      
       deal_card(dealer,deck)
