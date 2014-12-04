@@ -40,6 +40,7 @@ begin
 
     check_dealer_cards(dealer,deck)    
   end until player_done?(dealer)
+  #binding.pry
   compare_totals(player,dealer)
 
 
