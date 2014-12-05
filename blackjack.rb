@@ -63,24 +63,33 @@ end
 
 # Display methods
 
-def display_hand(player)  
-  top_line = ""
-  denomination_line = ""
-  suit_line = ""
-  side_line = ""
-  bottom_line = ""
+def display_hand(player,dealer=false)  
+  top_line =                   ""
+  denomination_line =          ""
+  suit_line =                  ""
+  side_line =                  ""  
+  bottom_line =                ""
   player[:hand].each do |card|
-     top_line <<             " ---  "
-     denomination_line <<    "| #{card[1]} | "    
-     suit_line <<            "| #{card[0]} | "
-     side_line <<            "|   | "
-     bottom_line <<          " ---  "
+    if dealer == true
+      top_line <<             " ---  "      
+      denomination_line <<    "| ~ | "
+      suit_line <<            "| ~ | "
+      side_line <<            "| ~ | "      
+      bottom_line <<          " ---  "
+      dealer = false  
+    else
+      top_line <<             " --- "
+      denomination_line <<    "| #{card[1]} | "    
+      suit_line <<            "| #{card[0]} | "
+      side_line <<            "|   | "        
+      bottom_line <<          " ---  "
+    end        
   end
   puts top_line
   puts denomination_line
   puts suit_line
   puts side_line
-  puts bottom_line
+  puts bottom_line  
 end
 
 def clear_screen
@@ -91,7 +100,7 @@ def display_table(player,dealer)
   edge = '***********************************************************************'  
   system("clear")    
   puts edge
-  display_hand(dealer)
+  display_hand(dealer,true)
   puts ""
   puts ""
   puts ""
@@ -127,6 +136,19 @@ def ask_for_name
   name
 end
 
+def ask_for_bet
+  begin
+    puts "What is your bet"
+    bet = gets.chomp.to_i
+    if bet == 0
+      puts "No bet, no cards!"
+    else
+      valid = true
+    end
+  end until valid
+  bet
+end
+
 # Play flow functions
 
 def introduction(player)  
@@ -152,7 +174,7 @@ def start_round(player,dealer,deck)
   puts "#{player[:name]} Chips: #{player[:chips]}"
   puts "Place your bet!"  
 
-  player[:bet] = gets.chomp.to_i
+  player[:bet] = ask_for_bet
   player[:chips] -= player[:bet]  
   
   display_table(player,dealer) 
@@ -174,7 +196,7 @@ def play_player(player,dealer,deck)
       player_total = calculate_total(player[:hand])
       dealer_total = calculate_total(dealer[:hand])
       
-      puts "Your total is: #{player_total}, dealer has: #{dealer_total}"
+      puts "Your total is: #{player_total}"
       puts "Hit or Stay? h/s"
       hit_or_stay = gets.chomp
       if hit_or_stay == 'h'    
